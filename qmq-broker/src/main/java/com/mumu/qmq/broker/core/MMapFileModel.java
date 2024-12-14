@@ -1,4 +1,4 @@
-package com.mumu.qmq.broker.utils;
+package com.mumu.qmq.broker.core;
 //
 //                       .::::.
 //                     .::::::::.
@@ -39,25 +39,17 @@ import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import static com.mumu.qmq.broker.core.MMapFileModel.getBytes;
-
-
 /**
  * @BelongsProject: QMQ
- * @BelongsPackage: com.mumu.qmq.broker.utils
- * @Description: 1.支持基于javaMMap api访问文件能力（文件读写的能力）
- * 2.支持指定的offset的文件映射（结束映射的offset-开始映射的offset=映射的内存体积）=done!
- * 3.文件从指定的offset开始读取 =done!
- * 4.文件从指定的offset开始写入 =done!
- * 5.文件映射后的内存释放
+ * @BelongsPackage: com.mumu.qmq.broker.core
+ * @Description: TODO
  * @Author: mumu
- * @CreateTime: 2024-12-13  12:26
+ * @CreateTime: 2024-12-14  09:11
  * @Version: 1.0
  */
-public class MMapUtil {
+public class MMapFileModel {
     private File file;
     private MappedByteBuffer mappedByteBuffer;
-
     private FileChannel fileChannel;
 
 
@@ -80,30 +72,50 @@ public class MMapUtil {
     /**
      * 支持从文件的指定offset开始读取内容
      *
-     * @param readOffset
-     * @param size
-     * @return
+     * @param readOffset 读取起始位置
+     * @param size 读取大小
+     * @return byte[]
      */
     public byte[] readContent(int readOffset, int size) {
         return getBytes(readOffset, size, mappedByteBuffer);
+    }
+
+    public static byte[] getBytes(int readOffset, int size, MappedByteBuffer mappedByteBuffer) {
+        mappedByteBuffer.position(readOffset);
+        byte[] content = new byte[size];
+        int j = 0;
+        for (int i = 0; i < size; i++) {
+            //这里是从内存空间读取数据
+            byte b = mappedByteBuffer.get(readOffset + i);
+            content[j++] = b;
+        }
+        return content;
     }
 
 
     /**
      * 更高性能的一种写入api
      *
-     * @param content
+     * @param content 消息内容
      */
     public void writeContent(byte[] content) {
         this.writeContent(content, false);
     }
 
+
     /**
      * 写入数据到磁盘当中
-     *
-     * @param content
+     * @param content 消息内容
+     * @param force 强制刷盘
      */
     public void writeContent(byte[] content, boolean force) {
+        //定位到最新的commitLog文件中，记录下当前文件是否已经写满，则创建新的文件，并且进行内存映射
+        //如何当前文件没有写满，对content内容做一层封装，在判断写入是否会导致commitLog写满，如果不会则选择当前commitLog,如果会则创建新文件，并且做内存映射
+        //定位到最小commitLog文件之后，写入
+        //定义一个对象专门管理各个topic的最新写入的offset值，并定时刷新到磁盘中
+        //写入数据，offset变更，如果高并发场景，offset是不是会被多个线程访问？
+        //多线程，写入加锁
+
         //默认刷到page cache中，
         //如果需要强制刷盘，这里要兼容
         mappedByteBuffer.put(content);
@@ -122,6 +134,13 @@ public class MMapUtil {
         invoke(invoke(viewed(mappedByteBuffer), "cleaner"), "clean");
     }
 
+    /**
+     *
+     * @param target
+     * @param methodName
+     * @param args
+     * @return Object
+     */
     private Object invoke(final Object target, final String methodName, final Class<?>... args) {
         return AccessController.doPrivileged(new PrivilegedAction<Object>() {
             public Object run() {
@@ -136,6 +155,14 @@ public class MMapUtil {
         });
     }
 
+    /**
+     *
+     * @param target
+     * @param methodName
+     * @param args
+     * @return
+     * @throws NoSuchMethodException
+     */
     private Method method(Object target, String methodName, Class<?>[] args)
             throws NoSuchMethodException {
         try {
@@ -145,6 +172,11 @@ public class MMapUtil {
         }
     }
 
+    /**
+     *
+     * @param buffer
+     * @return
+     */
     private ByteBuffer viewed(ByteBuffer buffer) {
         String methodName = "viewedBuffer";
         Method[] methods = buffer.getClass().getMethods();
@@ -156,12 +188,12 @@ public class MMapUtil {
         }
 
         ByteBuffer viewedBuffer = (ByteBuffer) invoke(buffer, methodName);
-        if (viewedBuffer == null)
+        if (viewedBuffer == null) {
             return buffer;
-        else
+        }else {
             return viewed(viewedBuffer);
+        }
     }
-
 
 
 }

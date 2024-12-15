@@ -28,23 +28,20 @@ package com.mumu.qmq.broker.utils;
 //
 //
 
-import com.alibaba.fastjson2.JSON;
-import com.mumu.qmq.broker.model.QMqTopicModel;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.List;
+
 
 /**
- * 简化版本的文件读取工具
+ * 简化版本的文件读取工具类
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.utils
- * @Description: TODO
+ * @Description: 简化版本的文件读取工具类
  * @Author: mumu
  * @CreateTime: 2024-12-14  11:26
  * @Version: 1.0
  */
-public class FileContentUtils {
+public class FileContentReaderUtil {
     public  static String readFromFile(String path){
         try(BufferedReader in = new BufferedReader(new FileReader(path))){
             StringBuffer stringBuffer=new StringBuffer();

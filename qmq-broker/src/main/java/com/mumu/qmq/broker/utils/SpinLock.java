@@ -1,4 +1,4 @@
-package com.mumu.qmq.broker;
+package com.mumu.qmq.broker.utils;
 //
 //                       .::::.
 //                     .::::::::.
@@ -29,15 +29,12 @@ package com.mumu.qmq.broker;
 //
 
 /**
- * @BelongsProject: QMQ
- * @BelongsPackage: com.mumu.qmq.broker
- * @Description: TODO
- * @Author: mumu
- * @CreateTime: 2024-12-13  12:24
- * @Version: 1.0
- */
-public class Test {
-    public static void  main(String[] args){
-        System.out.println("this is test");
-    }
+*@BelongsProject: QMQ
+*@BelongsPackage: com.mumu.qmq.broker.utils
+*@Description: TODO
+*@Author: mumu
+*@CreateTime: 2024-12-15  17:16
+*@Version: 1.0
+*/
+public class SpinLock {
 }

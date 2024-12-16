@@ -1,4 +1,4 @@
-package com.mumu.qmq.broker.utils;
+package com.mumu.qmq.broker.core;
 //
 //                       .::::.
 //                     .::::::::.
@@ -30,11 +30,11 @@ package com.mumu.qmq.broker.utils;
 
 /**
 *@BelongsProject: QMQ
-*@BelongsPackage: com.mumu.qmq.broker.utils
+*@BelongsPackage: com.mumu.qmq.broker.core
 *@Description: TODO
 *@Author: mumu
-*@CreateTime: 2024-12-15  09:33
+*@CreateTime: 2024-12-16  18:05
 *@Version: 1.0
 */
-public class CommitLogFileNameUtil {
+public class ConsumerQueueConsumerHandler {
 }

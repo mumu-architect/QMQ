@@ -28,13 +28,26 @@ package com.mumu.qmq.broker.utils;
 //
 //
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
-*@BelongsProject: QMQ
-*@BelongsPackage: com.mumu.qmq.broker.utils
-*@Description: TODO
-*@Author: mumu
-*@CreateTime: 2024-12-15  17:10
-*@Version: 1.0
-*/
-public class UnfailReentrantLock {
+ * 实现修改消息的锁，互斥锁，非公平锁
+ * @BelongsProject: QMQ
+ * @BelongsPackage: com.mumu.qmq.broker.utils
+ * @Description: 实现修改消息的锁，互斥锁，非公平锁
+ * @Author: mumu
+ * @CreateTime: 2024-12-15  17:10
+ * @Version: 1.0
+ */
+public class UnfailReentrantLock implements PutMessageLock{
+    private ReentrantLock reentrantLock=new ReentrantLock();
+    @Override
+    public void lock() {
+        reentrantLock.lock();
+    }
+
+    @Override
+    public void unlock() {
+        reentrantLock.unlock();
+    }
 }

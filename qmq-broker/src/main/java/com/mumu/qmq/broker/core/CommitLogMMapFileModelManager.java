@@ -32,9 +32,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * commitLog文件mmap模型管理，写入，读取
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.core
- * @Description: TODO
+ * @Description: mmap文件模型管理，写入，读取
  * @Author: mumu
  * @CreateTime: 2024-12-14  09:12
  * @Version: 1.0

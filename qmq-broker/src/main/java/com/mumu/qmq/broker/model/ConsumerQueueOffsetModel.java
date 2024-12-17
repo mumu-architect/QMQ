@@ -32,15 +32,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 消费队列消费当前queue的位置模型
+ * 消费队列消费当前queue的位置信息模型
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.model
- * @Description: TODO
+ * @Description: 消费队列消费当前queue的位置信息模型
  * @Author: mumu
  * @CreateTime: 2024-12-16  15:10
  * @Version: 1.0
  */
-public class ConsumeQueueOffsetModel {
+public class ConsumerQueueOffsetModel {
     private OffsetTable offsetTable = new OffsetTable();
     public static class OffsetTable {
         private Map<String,ConsumerGroupDetail> topicConsumerGroupDetail = new HashMap<>();

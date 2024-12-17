@@ -28,13 +28,42 @@ package com.mumu.qmq.broker.utils;
 //
 //
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
-*@BelongsProject: QMQ
-*@BelongsPackage: com.mumu.qmq.broker.utils
-*@Description: TODO
-*@Author: mumu
-*@CreateTime: 2024-12-15  17:16
-*@Version: 1.0
-*/
-public class SpinLock {
+ * 自旋锁，原地等待的方式
+ * @BelongsProject: QMQ
+ * @BelongsPackage: com.mumu.qmq.broker.utils
+ * @Description: TODO
+ * @Author: mumu
+ * @CreateTime: 2024-12-15  17:16
+ * @Version: 1.0
+ */
+public class SpinLock implements PutMessageLock{
+    AtomicInteger atomicInteger = new AtomicInteger(0);
+
+    @Override
+    public void lock() {
+        do {
+            //将当前值返回后在加1
+            int result = atomicInteger.getAndIncrement();
+            System.out.println(result);
+            if (result == 1) {
+                return;
+            }
+        } while (true);
+    }
+
+    @Override
+    public void unlock() {
+        //将当前值减1后返回
+        atomicInteger.decrementAndGet();
+    }
+
+
+
+
+
+
 }

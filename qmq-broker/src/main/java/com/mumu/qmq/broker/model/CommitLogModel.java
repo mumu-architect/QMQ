@@ -31,9 +31,10 @@ package com.mumu.qmq.broker.model;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * commitLog文件的模型
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.model
- * @Description: TODO
+ * @Description: commitLog文件的写入offset封装
  * @Author: mumu
  * @CreateTime: 2024-12-14  11:42
  * @Version: 1.0

@@ -29,12 +29,19 @@ package com.mumu.qmq.broker.utils;
 //
 
 /**
-*@BelongsProject: QMQ
-*@BelongsPackage: com.mumu.qmq.broker.utils
-*@Description: TODO
-*@Author: mumu
-*@CreateTime: 2024-12-15  17:08
-*@Version: 1.0
-*/
-public class PutMessageLock {
+ * 修改消息的锁接口类
+ * @BelongsProject: QMQ
+ * @BelongsPackage: com.mumu.qmq.broker.utils
+ * @Description: 修改消息的锁接口类
+ * @Author: mumu
+ * @CreateTime: 2024-12-15  17:08
+ * @Version: 1.0
+ */
+public interface PutMessageLock {
+    /**
+     * 枷锁
+     */
+    void lock();
+    //解锁
+    void unlock();
 }

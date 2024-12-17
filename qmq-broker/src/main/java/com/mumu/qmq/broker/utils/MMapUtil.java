@@ -39,10 +39,10 @@ import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import static com.mumu.qmq.broker.core.MMapFileModel.getBytes;
 
 
 /**
+ * 支持基于javaMMap api访问文件能力（文件读写的能力）
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.utils
  * @Description: 1.支持基于javaMMap api访问文件能力（文件读写的能力）
@@ -85,7 +85,15 @@ public class MMapUtil {
      * @return
      */
     public byte[] readContent(int readOffset, int size) {
-        return getBytes(readOffset, size, mappedByteBuffer);
+        mappedByteBuffer.position(readOffset);
+        byte[] content = new byte[size];
+        int j = 0;
+        for (int i = 0; i < size; i++) {
+            //这里是从内存空间读取数据
+            byte b = mappedByteBuffer.get(readOffset + i);
+            content[j++] = b;
+        }
+        return content;
     }
 
 

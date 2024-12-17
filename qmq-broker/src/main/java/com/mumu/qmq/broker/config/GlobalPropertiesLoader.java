@@ -33,10 +33,10 @@ import com.mumu.qmq.broker.constants.BrokerConstants;
 import io.netty.util.internal.StringUtil;
 
 /**
- * 加载读取环境变量中配置的mq存储绝对路径地址的对象
+ * 加载全局配置文件
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.config
- * @Description: TODO
+ * @Description: 加载读取环境变量中配置的mq存储绝对路径地址的对象
  * @Author: mumu
  * @CreateTime: 2024-12-14  10:34
  * @Version: 1.0

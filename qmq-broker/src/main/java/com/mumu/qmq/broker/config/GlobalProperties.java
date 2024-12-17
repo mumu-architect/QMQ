@@ -29,10 +29,10 @@ package com.mumu.qmq.broker.config;
 //
 
 /**
- * 读取环境变量中配置的mq存储绝对路径地址
+ * 全局配置文件
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.config
- * @Description: TODO
+ * @Description: 全局配置文件
  * @Author: mumu
  * @CreateTime: 2024-12-14  10:30
  * @Version: 1.0

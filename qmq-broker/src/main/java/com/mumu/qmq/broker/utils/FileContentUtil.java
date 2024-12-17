@@ -30,6 +30,8 @@ package com.mumu.qmq.broker.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 /**
@@ -41,7 +43,7 @@ import java.io.FileReader;
  * @CreateTime: 2024-12-14  11:26
  * @Version: 1.0
  */
-public class FileContentReaderUtil {
+public class FileContentUtil {
     public  static String readFromFile(String path){
         try(BufferedReader in = new BufferedReader(new FileReader(path))){
             StringBuffer stringBuffer=new StringBuffer();
@@ -50,6 +52,20 @@ public class FileContentReaderUtil {
             }
             return stringBuffer.toString();
         }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * topic配置的覆盖写入
+     * @param path
+     * @param content
+     */
+    public static void overWriteToFile(String path,String content){
+        try(FileWriter fileWriter=new FileWriter(path)){
+            fileWriter.write(content);
+            fileWriter.flush();
+        }catch (IOException e){
             throw new RuntimeException(e);
         }
     }

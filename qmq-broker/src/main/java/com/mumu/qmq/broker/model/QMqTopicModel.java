@@ -31,10 +31,10 @@ package com.mumu.qmq.broker.model;
 import java.util.List;
 
 /**
- * mq的topic映射对象
+ * mq的topic映射对象模型
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.model
- * @Description: TODO
+ * @Description: mq的topic映射对象模型
  * @Author: mumu
  * @CreateTime: 2024-12-14  11:36
  * @Version: 1.0

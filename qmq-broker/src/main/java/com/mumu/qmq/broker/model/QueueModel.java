@@ -31,9 +31,10 @@ package com.mumu.qmq.broker.model;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * topic主题队列的模型
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.model
- * @Description: TODO
+ * @Description: topic主题队列的模型
  * @Author: mumu
  * @CreateTime: 2024-12-14  11:37
  * @Version: 1.0
@@ -72,11 +73,9 @@ public class QueueModel {
     public AtomicInteger getLatestOffset() {
         return latestOffset;
     }
-
     public void setLatestOffset(AtomicInteger latestOffset) {
         this.latestOffset = latestOffset;
     }
-
     public Integer getLastOffset() {
         return lastOffset;
     }
@@ -84,15 +83,7 @@ public class QueueModel {
     public void setLastOffset(Integer lastOffset) {
         this.lastOffset = lastOffset;
     }
-
-    @Override
-    public String toString() {
-        return "QueueModel{" +
-                "id=" + id +
-                ", fileName='" + fileName + '\'' +
-                ", offsetLimit=" + offsetLimit +
-                ", latestOffset=" + latestOffset +
-                ", lastOffset=" + lastOffset +
-                '}';
+    public int countDiff(){
+        return this.getOffsetLimit()-this.getLatestOffset().get();
     }
 }

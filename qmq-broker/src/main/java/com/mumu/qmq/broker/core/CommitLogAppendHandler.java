@@ -28,12 +28,18 @@ package com.mumu.qmq.broker.core;
 //
 //
 
+import com.mumu.qmq.broker.constants.BrokerConstants;
+import com.mumu.qmq.broker.model.CommitLogMessageModel;
+
 import java.io.IOException;
 
 /**
+ * 预处理mmap空间映射
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.core
- * @Description: TODO
+ * @Description: 1.预处理mmap空间映射
+ * 2.消息写入
+ * 3.消息读取
  * @Author: mumu
  * @CreateTime: 2024-12-14  09:25
  * @Version: 1.0
@@ -47,27 +53,38 @@ public class CommitLogAppendHandler {
      * 预处理mmap空间映射
      * @throws IOException
      */
-    public void prepareMMapLoading(String filPath,String topicName) throws IOException{
+    public void prepareMMapLoading(String topicName) throws IOException{
         MMapFileModel mMapFileModel=new MMapFileModel();
-        mMapFileModel.loadFileInMMap(filPath,0,1*1024*1024);
+        mMapFileModel.loadFileInMMap(topicName,0, BrokerConstants.COMMIT_LOG_DEFAULT_MMAP_SIZE);
         mMapFileModelManager.put(topicName,mMapFileModel);
     }
 
-    public void appendMsg(String topic,String content){
+    /**
+     * 消息写入
+     * @param topic
+     * @param content
+     */
+    public void appendMsg(String topic, byte[] content) throws IOException {
         MMapFileModel mMapFileModel=mMapFileModelManager.get(topic);
         if(mMapFileModel==null){
             throw new RuntimeException("topic is invalid!");
         }
-        mMapFileModel.writeContent(content.getBytes());
+        CommitLogMessageModel commitLogMessageModel=new CommitLogMessageModel();
+        commitLogMessageModel.setContent(content);
+        mMapFileModel.writeContent(commitLogMessageModel);
     }
 
 
+    /**
+     * 消息读取
+     * @param topic
+     */
     public void readMsg(String topic){
         MMapFileModel mMapFileModel=mMapFileModelManager.get(topic);
         if(mMapFileModel==null){
             throw new RuntimeException("topic is invalid!");
         }
-        byte[] content = mMapFileModel.readContent(0,10);
+        byte[] content = mMapFileModel.readContent(0,1000);
         System.out.println(new String(content));
     }
 

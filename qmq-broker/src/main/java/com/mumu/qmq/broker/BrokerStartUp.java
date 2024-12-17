@@ -29,19 +29,21 @@ package com.mumu.qmq.broker;
 //
 
 import com.mumu.qmq.broker.cache.CommonCache;
+import com.mumu.qmq.broker.config.ConsumerQueueOffsetLoader;
 import com.mumu.qmq.broker.config.GlobalPropertiesLoader;
 import com.mumu.qmq.broker.config.QMqTopicLoader;
-import com.mumu.qmq.broker.constants.BrokerConstants;
 import com.mumu.qmq.broker.core.CommitLogAppendHandler;
+import com.mumu.qmq.broker.core.ConsumerQueueAppendHandler;
 import com.mumu.qmq.broker.model.QMqTopicModel;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
+ * Broker启动
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker
- * @Description: TODO
+ * @Description: Broker启动
  * @Author: mumu
  * @CreateTime: 2024-12-14  11:54
  * @Version: 1.0
@@ -49,34 +51,43 @@ import java.util.List;
 public class BrokerStartUp {
     private static GlobalPropertiesLoader globalPropertiesLoader;
     private static QMqTopicLoader qMqTopicLoader;
-    private static CommitLogAppendHandler messageAppendHandler;
-
+    private static CommitLogAppendHandler commitLogAppendHandler;
+    private static ConsumerQueueOffsetLoader consumerQueueOffsetLoader;
+    private static ConsumerQueueAppendHandler consumerQueueAppendHandler;
     /**
+     * 初始化配置逻辑
      * 加载配置，映射mmap内存
      * @throws IOException 异常
      */
     private static void initProperties() throws IOException {
+        //全局配置
         globalPropertiesLoader= new GlobalPropertiesLoader();
         globalPropertiesLoader.loadProperties();
+        //topic配置
         qMqTopicLoader=new QMqTopicLoader();
         qMqTopicLoader.loadProperties();
-        messageAppendHandler=new CommitLogAppendHandler();
-        List<QMqTopicModel> qMqTopicModelList = CommonCache.getQMqTopicModelList();
-        for(QMqTopicModel qMqTopicModel:qMqTopicModelList){
+        qMqTopicLoader.startRefreshQMqTopicInfoTask();
+        //消费者队列配置
+        consumerQueueOffsetLoader=new ConsumerQueueOffsetLoader();
+        consumerQueueOffsetLoader.loadProperties();
+        //commitLogAppendHandler
+        commitLogAppendHandler=new CommitLogAppendHandler();
+        for(QMqTopicModel qMqTopicModel:CommonCache.getQMqTopicModelMap().values()){
             String  topicName=qMqTopicModel.getTopic();
-            String filePath=CommonCache.getGlobalProperties().getQMqHome()
-                    +BrokerConstants.BASE_STORE_PAtH
-                    +topicName
-                    +"/00000000";
-            messageAppendHandler.prepareMMapLoading(filePath,topicName);
+            commitLogAppendHandler.prepareMMapLoading(topicName);
+            consumerQueueAppendHandler.prepareConsumerQueue(topicName);
         }
 
     }
-//    public static void main(String[] args) throws IOException {
-//        initProperties();
-//        //模拟初始化文件映射
-//        String topic="order_cancel_topic";
-//        messageAppendHandler.appendMsg(topic,"this is a test content");
-//        messageAppendHandler.readMsg(topic);
-//    }
+    public static void main(String[] args) throws IOException, InterruptedException {
+        initProperties();
+        //模拟初始化文件映射
+        String topic="order_cancel_topic";
+        for(int i=0;i<1000;i++){
+            commitLogAppendHandler.appendMsg(topic,("this is a content"+i).getBytes());
+            System.out.println("写入数据");
+            TimeUnit.SECONDS.sleep(1);
+        }
+        //commitLogAppendHandler.readMsg(topic);
+    }
 }

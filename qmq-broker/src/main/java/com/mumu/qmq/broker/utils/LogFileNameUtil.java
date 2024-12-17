@@ -40,7 +40,7 @@ import com.mumu.qmq.broker.constants.BrokerConstants;
  * @CreateTime: 2024-12-15  09:33
  * @Version: 1.0
  */
-public class CommitLogFileNameUtil {
+public class LogFileNameUtil {
     /**
      * 构建第一份commitLog文件名称
      * @return
@@ -57,9 +57,10 @@ public class CommitLogFileNameUtil {
      */
     public static String buildCommitLogFilePath(String topicName,String commitLogFileName){
         return CommonCache.getGlobalProperties().getQMqHome()
-                + BrokerConstants.BASE_STORE_PAtH
+                + BrokerConstants.BASE_COMMIT_LOG_PATH
                 +topicName
-                +"/"+commitLogFileName;
+                +BrokerConstants.SPLIT
+                +commitLogFileName;
     }
     /**
      * 根据老的commitLog文件名，生成新的commitLog文件名
@@ -86,8 +87,30 @@ public class CommitLogFileNameUtil {
         return stringBuffer.toString();
     }
 
-//    public static void main(String[] args) {
-//        String newFileName = CommitLogFileNameUtil.increaseCommitLogFileName("00000011");
-//        System.out.println(newFileName);
-//    }
+    /**
+     * 构建新的ConsumerQueue文件路径
+     * @param topicName topic主题名
+     * @param queueId 队列id
+     * @param consumerQueueFileName 文件名
+     * @return 新的ConsumerQueue文件路径
+     */
+    public static String buildConsumerQueueFilePath(String topicName,Integer queueId,String consumerQueueFileName){
+        return CommonCache.getGlobalProperties().getQMqHome()
+                +BrokerConstants.BASE_CONSUMER_QUEUE_PATH
+                +topicName
+                +BrokerConstants.SPLIT
+                +queueId
+                +BrokerConstants.SPLIT
+                +consumerQueueFileName;
+    }
+    /**
+     * 根据老的cConsumerQueue文件名，生成新的ConsumerQueue文件名
+     * @param oldFileName 老的ConsumerQueue文件名
+     * @return 新的文件名
+     */
+    public static String increaseConsumerQueueFileName(String oldFileName){
+        return increaseCommitLogFileName(oldFileName);
+    }
+
+
 }

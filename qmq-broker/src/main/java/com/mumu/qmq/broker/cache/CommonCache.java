@@ -29,23 +29,29 @@ package com.mumu.qmq.broker.cache;
 //
 
 import com.mumu.qmq.broker.config.GlobalProperties;
+import com.mumu.qmq.broker.core.ConsumerQueueMMapFileModelManager;
+import com.mumu.qmq.broker.model.ConsumerQueueOffsetModel;
 import com.mumu.qmq.broker.model.QMqTopicModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * 统一缓存对象
+ * 统一缓存配置文件内容类
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.cache
- * @Description: TODO
+ * @Description: 统一缓存配置文件内容类
  * @Author: mumu
  * @CreateTime: 2024-12-14  10:57
  * @Version: 1.0
  */
 public class CommonCache {
     public static GlobalProperties globalProperties = new GlobalProperties();
-    public static List<QMqTopicModel> qMqTopicModelList = new ArrayList<>();
+    public static List<QMqTopicModel> qMqTopicModelMapList=new ArrayList<>();
+    public static ConsumerQueueOffsetModel consumerQueueOffsetModel=new ConsumerQueueOffsetModel();
+    public static ConsumerQueueMMapFileModelManager consumerQueueMMapFileModelManager=new ConsumerQueueMMapFileModelManager();
 
     public static GlobalProperties getGlobalProperties() {
         return globalProperties;
@@ -55,11 +61,31 @@ public class CommonCache {
         CommonCache.globalProperties = globalProperties;
     }
 
-    public static List<QMqTopicModel> getQMqTopicModelList() {
-        return qMqTopicModelList;
+    public static Map<String,QMqTopicModel> getQMqTopicModelMap() {
+        return qMqTopicModelMapList.stream().collect(Collectors.toMap(QMqTopicModel::getTopic,item->item));
     }
 
-    public static void setQMqTopicModelList(List<QMqTopicModel> qMqTopicModelList) {
-        CommonCache.qMqTopicModelList = qMqTopicModelList;
+    public static List<QMqTopicModel> getqMqTopicModelMapList() {
+        return qMqTopicModelMapList;
+    }
+
+    public static void setQMqTopicModelMapList(List<QMqTopicModel> qMqTopicModelMap) {
+        CommonCache.qMqTopicModelMapList = qMqTopicModelMap;
+    }
+
+    public static ConsumerQueueOffsetModel getConsumerQueueOffsetModel() {
+        return consumerQueueOffsetModel;
+    }
+
+    public static void setConsumerQueueOffsetModel(ConsumerQueueOffsetModel consumerQueueOffsetModel) {
+        CommonCache.consumerQueueOffsetModel = consumerQueueOffsetModel;
+    }
+
+    public static ConsumerQueueMMapFileModelManager getConsumerQueueMMapFileModelManager() {
+        return consumerQueueMMapFileModelManager;
+    }
+
+    public static void setConsumerQueueMMapFileModelManager(ConsumerQueueMMapFileModelManager consumerQueueMMapFileModelManager) {
+        CommonCache.consumerQueueMMapFileModelManager = consumerQueueMMapFileModelManager;
     }
 }

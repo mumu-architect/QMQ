@@ -1,4 +1,4 @@
-package com.mumu.qmq.nameserver.event.listener;
+package com.mumu.qmq.nameserver.core;
 //
 //                       .::::.
 //                     .::::::::.
@@ -30,11 +30,11 @@ package com.mumu.qmq.nameserver.event.listener;
 
 /**
 *@BelongsProject: QMQ
-*@BelongsPackage: com.mumu.qmq.nameserver.event.listener
+*@BelongsPackage: com.mumu.qmq.nameserver.core
 *@Description: TODO
 *@Author: mumu
-*@CreateTime: 2024-12-18  18:27
+*@CreateTime: 2024-12-19  13:52
 *@Version: 1.0
 */
-public class Listener {
+public class PropertiesLoader {
 }

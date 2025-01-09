@@ -28,63 +28,63 @@ package com.mumu.qmq.broker.config;
 //
 //
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSONWriter;
 import com.mumu.qmq.broker.cache.CommonCache;
-import com.mumu.qmq.broker.constants.BrokerConstants;
-import com.mumu.qmq.broker.model.ConsumerQueueOffsetModel;
-import com.mumu.qmq.broker.model.QMqTopicModel;
+import com.mumu.qmq.common.constants.BrokerConstants;
+import com.mumu.qmq.broker.model.ConsumeQueueOffsetModel;
 import com.mumu.qmq.broker.utils.FileContentUtil;
 import io.netty.util.internal.StringUtil;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 加载全局属性，加载消费队列配置文件信息
  * @BelongsProject: QMQ
  * @BelongsPackage: com.mumu.qmq.broker.config
- * @Description: TODO
+ * @Description: 加载全局属性，加载消费队列配置文件信息
  * @Author: mumu
  * @CreateTime: 2024-12-16  15:18
  * @Version: 1.0
  */
-public class ConsumerQueueOffsetLoader {
+public class ConsumeQueueOffsetLoader {
 
     private String filePath;
-    /**
-     * 加载全局属性，加载消费队列配置文件信息，最后consumer-queue-offset配置信息存入内存
-     */
-    public void loadProperties(){
-        GlobalProperties globalProperties= CommonCache.getGlobalProperties();
-        String basePath=globalProperties.getQMqHome();
+
+    public void loadProperties() {
+        GlobalProperties globalProperties = CommonCache.getGlobalProperties();
+        String basePath = globalProperties.getQMqHome();
         if(StringUtil.isNullOrEmpty(basePath)){
-            throw new IllegalStateException("Q_MQ_HOME is invalid!");
+            throw new IllegalArgumentException("Q_MQ_HOME is invalid!");
         }
-        filePath=basePath+"/config/consumer-queue-offset.json";
+        filePath = basePath + "/config/consume-queue-offset.json";
         String fileContent = FileContentUtil.readFromFile(filePath);
-        ConsumerQueueOffsetModel consumerQueueOffsetModel= JSON.parseObject(fileContent, ConsumerQueueOffsetModel.class);
-        CommonCache.setConsumerQueueOffsetModel(consumerQueueOffsetModel);
+        ConsumeQueueOffsetModel consumeQueueOffsetModels = com.alibaba.fastjson.JSON.parseObject(fileContent, ConsumeQueueOffsetModel.class);
+        CommonCache.setConsumeQueueOffsetModel(consumeQueueOffsetModels);
     }
+
 
     /**
      * 开启一个刷新内存到磁盘的任务
      */
-    public void startRefreshConsumerQueueOffsetTask(){
+    public void startRefreshConsumeQueueOffsetTask() {
         //异步线程
-        //每个15秒将内存中的主题信息刷新到磁盘
-        CommonThreadPoolConfig.refreshConsumerQueueOffsetExecutor.execute(new Runnable() {
+        //每3秒将内存中的配置刷新到磁盘里面
+        CommonThreadPoolConfig.refreshConsumeQueueOffsetExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                do{
+                do {
                     try {
-                        TimeUnit.SECONDS.sleep(BrokerConstants.DEFAULT_REFRESH_CONSUMER_QUEUE_OFFSET_TIME_STEP);
-                        System.out.println("刷新ConsumerQueueOffset到磁盘");
-                        ConsumerQueueOffsetModel consumerQueueOffsetModel=CommonCache.getConsumerQueueOffsetModel();
-                        FileContentUtil.overWriteToFile(filePath,JSON.toJSONString(consumerQueueOffsetModel));
+                        TimeUnit.SECONDS.sleep(BrokerConstants.DEFAULT_REFRESH_CONSUME_QUEUE_OFFSET_TIME_STEP);
+                        ConsumeQueueOffsetModel consumeQueueOffsetModel = CommonCache.getConsumeQueueOffsetModel();
+                        FileContentUtil.overWriteToFile(filePath, JSON.toJSONString(consumeQueueOffsetModel, SerializerFeature.PrettyFormat));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                }while(true);
+                }while (true);
             }
         });
+
     }
 }

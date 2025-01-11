@@ -1,0 +1,26 @@
+.pagination-block {
+    text-align: right;
+    margin-top: 50px;
+}
+
+.search-input {
+    margin-top: 150px;
+    width: 200px;
+    display: inline-block;
+}
+
+.search-btn {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.create-topic-btn {
+    display: inline-block;
+    text-align: right;
+    position: relative;
+    left: 80%;
+}
+
+.table-content {
+    margin-top: 20px;
+}

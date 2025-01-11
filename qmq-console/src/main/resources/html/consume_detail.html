@@ -1,0 +1,90 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>消费者详情</title>
+    <!--    <link rel="stylesheet" href="../css/index.css">-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/topic_list.css">
+    <!-- 引入ElementUI组件库 -->
+    <script src="../js/vue.js"></script>
+    <script src="../js/index.js"></script>
+    <!-- 常用http请求，axios实现 -->
+    <script src="../js/axios.min.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/utils.js"></script>
+</head>
+
+<body class="main-content">
+<div id="app">
+    <div class="top-tab">
+        <div>
+            <span>
+                <img src="../img/eaglemq_logo.png" class="top-logo" alt="">
+            </span>
+            <span class="top-title top-title-link"  onclick="window.location.href='topic_list.html'">
+                    Topic管理
+            </span>
+            <span class="top-title top-title-link-choose">
+                    消费者详情
+            </span>
+        </div>
+    </div>
+
+    <div class="main-body">
+        <div class="search-input">
+            <span>
+               <el-input
+                       placeholder="请输入topic"
+                       v-model="topicName"
+                       clearable>
+              </el-input>
+            </span>
+        </div>
+        <div class="search-btn">
+            <el-button type="primary" @click="queryConsumerInfo()">搜索</el-button>
+        </div>
+        <div class="table-content">
+            <el-table
+                    :data="topicList"
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="topic"
+                        label="topic">
+                    <template slot-scope="scope">
+                        <el-tag :type="success" close-transition>
+                            {{scope.row.topic}}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="consumerGroup"
+                        label="consumerGroup">
+                </el-table-column>
+                <el-table-column
+                        prop="queueId"
+                        label="queueId">
+                </el-table-column>
+                <el-table-column
+                        prop="currentOffset"
+                        label="currentOffset">
+                </el-table-column>
+                <el-table-column
+                        prop="offsetLimit"
+                        label="offsetLimit">
+                </el-table-column>
+                <el-table-column
+                        prop="lastOffset"
+                        label="lastOffset">
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="../js/consume_detail.js"></script>
+
+</html>
